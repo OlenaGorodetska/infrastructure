@@ -1,3 +1,5 @@
+resource_group_name = dev-resources
+resource_group_location = westeurope
 company     = "devcloud"
 prefix      = "dev"
 environment = "dev"

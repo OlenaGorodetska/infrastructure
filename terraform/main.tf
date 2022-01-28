@@ -3,8 +3,8 @@ provider "azurerm" {
 }
 
 resource "azurerm_resource_group" "rg" {
-  name     = "dev-resources"
-  location = "westeurope"
+  name     = var.resource_group_name
+  location = var.resource_group_location
 }
 
 module "network" {
@@ -22,7 +22,7 @@ module "network" {
   }
 
   tags = {
-    environment = "dev"
+    environment = var.environment
   }
 
   depends_on = [azurerm_resource_group.rg]

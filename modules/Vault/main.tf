@@ -1,7 +1,7 @@
-resource "azurerm_key_vault" "example" {
-  name                        = var.prefix-"vault"
-  location                    = data.azurerm_resource_group.example.location
-  resource_group_name         = data.azurerm_resource_group.example.name
+resource "azurerm_key_vault" "vault" {
+  name                        = "var.prefix-vault"
+  location                    = data.azurerm_resource_group.vault.location
+  resource_group_name         = data.azurerm_resource_group.vault.name
   enabled_for_disk_encryption = true
   tenant_id                   = data.azurerm_client_config.current.tenant_id
   soft_delete_retention_days  = 7

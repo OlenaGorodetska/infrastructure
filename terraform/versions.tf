@@ -7,3 +7,14 @@ terraform {
     }
   }
 }
+
+terraform {
+  backend "remote" {
+    hostname = "app.terraform.io"
+    organization = "example-org-535ac9"
+
+    workspaces {
+      prefix = "infrastructure-"
+    }
+  }
+}
