@@ -1,16 +1,13 @@
 terraform {
-  required_version = ">= 0.13"
+  required_version = ">= 1.1.3"
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = ">= 1.32"
+      version = ">=2.91.0"
     }
   }
-}
-
-terraform {
   backend "remote" {
-    hostname = "app.terraform.io"
+    hostname     = "app.terraform.io"
     organization = "example-org-535ac9"
 
     workspaces {

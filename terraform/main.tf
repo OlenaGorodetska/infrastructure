@@ -1,5 +1,9 @@
 provider "azurerm" {
-  features {}
+  tenant_id = var.tenant_id
+  client_id = var.client_id
+  client_secret = var.client_secret
+  subscription_id = var.subscription_id
+features {}
 }
 
 resource "azurerm_resource_group" "rg" {
@@ -8,24 +12,12 @@ resource "azurerm_resource_group" "rg" {
 }
 
 module "network" {
-  # source              = "Azure/network/azurerm"
-  source = "../modules/Vnet"
+  source = "./modules/Vnet"
   resource_group_name = azurerm_resource_group.rg.name
+  resource_group_location = azurerm_resource_group.rg.location
   address_spaces      = ["10.0.0.0/16", "10.2.0.0/16"]
   subnet_prefixes     = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
   subnet_names        = ["subnet1", "subnet2", "subnet3"]
-
-  subnet_service_endpoints = {
-    # "subnet1" : ["Microsoft.KeyVault"], 
-    # "subnet2" : ["Microsoft.PrivateEndpoint"],
-    "subnet3" : ["Microsoft.Web"]
-  }
-
-  tags = {
-    environment = var.environment
-  }
-
-  depends_on = [azurerm_resource_group.rg]
 }
 
 resource "azurerm_container_registry" "acr" {
@@ -49,10 +41,13 @@ resource "azurerm_user_assigned_identity" "example" {
   name                = "registry-uai"
 }
 
-
-# # Create a private postgres database
-# module "postgres" {
-#     source              = "../../../terraform-modules/db/"
-#     postgresql-admin-login = azurerm_postgresql_server.postgresql_server.administrator_login
-#     postgresql-admin-password = "${local.postgresql-admin-password}"
-# }
+module "Vault"{
+    source = "./modules/Vault"
+    resource_group_name = azurerm_resource_group.rg.name
+    resource_group_location = azurerm_resource_group.rg.location
+    environment = var.environment
+    purge_protection_enabled = var.purge_protection_enabled
+    tenant_id = var.tenant_id
+    object_id = var.object_id
+}
+ 
