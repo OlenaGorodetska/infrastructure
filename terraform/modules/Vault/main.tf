@@ -1,3 +1,4 @@
+data "azurerm_client_config" "current" {}
 resource "azurerm_key_vault" "vault" {
   name                        = format("%s-kv", lower(var.environment))
   location                    = var.resource_group_location
@@ -9,32 +10,27 @@ resource "azurerm_key_vault" "vault" {
   purge_protection_enabled    = var.purge_protection_enabled
 
   sku_name = var.sku_name
-
-  access_policy {
-    tenant_id = var.tenant_id
-    object_id = var.object_id
-
-    key_permissions = [
-      "Get",
-    ]
-
-    secret_permissions = [
-      "Get",
-    ]
-
-    storage_permissions = [
-      "Get",
-    ]
+  network_acls {
+    default_action = "Allow"
+    bypass         = "AzureServices"
   }
 }
 
+resource "azurerm_role_assignment" "role-secret-officer" {
+  role_definition_name = "Key Vault secrets officer"
+  scope         = azurerm_key_vault.vault.id
+  principal_id  = data.azurerm_client_config.current.tenant_id
+}
 
-  # dynamic "network_acls" {
-  #   for_each = var.network_acls != null ? [true] : []
-  #   content {
-  #     bypass                     = var.network_acls.bypass
-  #     default_action             = var.network_acls.default_action
-  #     ip_rules                   = var.network_acls.ip_rules
-  #     virtual_network_subnet_ids = var.network_acls.virtual_network_subnet_ids
-  #   }
-  # }
+resource "azurerm_key_vault_secret" "database-password" {
+  name = var.secret_name
+  value = var.secret_value
+  key_vault_id = azurerm_key_vault.vault.id
+}
+
+resource "azurerm_role_assignment" "role-secret-user" {
+  role_definition_name = "Key Vault secrets user"
+  scope         = azurerm_key_vault.vault.id/secrets/azurerm_key_vault_secret.database-password.name
+  principal_id  = data.azurerm_client_config.current.tenant_id
+}
+

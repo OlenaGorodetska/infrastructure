@@ -56,3 +56,35 @@ variable "purge_protection_enabled" {
   type = bool
   description = "(optional) describe your variable"
 }
+
+variable "policies" {
+  type = map(object({
+    tenant_id               = string
+    object_id               = string
+    key_permissions         = list(string)
+    secret_permissions      = list(string)
+    certificate_permissions = list(string)
+    storage_permissions     = list(string)
+  }))
+  description = "Define a Azure Key Vault access policy"
+  default = {}
+}
+
+# variable "secrets" {
+#   type = map(object({
+#     value = string
+#   }))
+#   description = "Define Azure Key Vault secrets"
+#   default = {}
+# }
+
+variable "secret_name" {
+  type        = string
+  description = "Key Vault Secret name in Azure"
+}
+
+variable "secret_value" {
+  type        = string
+  description = "Key Vault Secret value in Azure"
+  sensitive   = true
+}

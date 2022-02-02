@@ -42,12 +42,24 @@ resource "azurerm_user_assigned_identity" "example" {
 }
 
 module "Vault" {
-  source                   = "./modules/Vault"
-  resource_group_name      = azurerm_resource_group.rg.name
-  resource_group_location  = azurerm_resource_group.rg.location
-  environment              = var.environment
-  purge_protection_enabled = var.purge_protection_enabled
-  tenant_id                = var.tenant_id
-  object_id                = var.object_id
+  source                          = "./modules/Vault"
+  resource_group_name             = azurerm_resource_group.rg.name
+  resource_group_location         = azurerm_resource_group.rg.location
+  environment                     = var.environment
+  purge_protection_enabled        = var.purge_protection_enabled
+  tenant_id                       = var.tenant_id
+  object_id                       = var.object_id
+  secret_value                    = var.secret_value
+  secret_name                     = var.secret_name
 }
- 
+
+module "PostgreSQL" {
+  source = "./modules/db"
+  resource_group_name = azurerm_resource_group.rg.name
+  location = azurerm_resource_group.rg.location
+  server_name = var.server_name
+  administrator_password = var.secret_value
+  administrator_login = var.administrator_login
+  sku_name = var.sku_name
+  server_version = var.server_version
+}
