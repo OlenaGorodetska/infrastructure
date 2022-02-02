@@ -1,0 +1,9 @@
+environment               = "prod"
+location                  = "westeurope"
+owner                     = "Olena Gorodetska"
+postgresql-admin-login    = "psqladmin"
+postgresql-admin-password = "Th1sIsAP@ssw0rd"
+private_endpoint_enabled  = true
+server_version  = "12"
+sku_name = "B_Gen4_1"
+storage_mb  = "5120"

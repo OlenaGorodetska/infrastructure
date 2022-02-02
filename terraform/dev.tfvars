@@ -1,0 +1,11 @@
+resource_group_name     = dev-resources
+resource_group_location = westeurope
+environment             = "dev"
+location                = "westeurope"
+description             = "Deploy a PostgreSQL Server"
+owner                   = "Olena Gorodetska"
+postgresql-admin-login  = "psqladmin"
+# postgresql-admin-password = "Th1sIsAP@ssw0rd"
+server_version  = "12"
+sku_name = "B_Gen4_1"
+storage_mb  = "5120"
